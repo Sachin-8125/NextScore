@@ -13,3 +13,51 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id              String    @id @default(cuid())
+  phone           String    @unique // Phone number is a great unique identifier
+  name            String
+  createdAt       DateTime  @default(now())
+  creditScore     Float?    // The final calculated score
+
+  transactions    UpiTransaction[]
+  recharges       MobileRecharge[]
+  
+  // Vouching relationships
+  vouchesGiven    CommunityVouch[] @relation("Voucher")
+  vouchesReceived CommunityVouch[] @relation("Vouchee")
+}
+
+model UpiTransaction {
+  id        String    @id @default(cuid())
+  amount    Float
+  type      String    // "CREDIT" or "DEBIT"
+  timestamp DateTime  @default(now())
+  
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model MobileRecharge {
+  id        String    @id @default(cuid())
+  amount    Float
+  timestamp DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model CommunityVouch {
+  id          String   @id @default(cuid())
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime @default(now())
+
+  // The user recieve the vouch
+  voucher     User     @relation("Voucher", fields: [voucherId], references: [id])
+  voucherId   String
+
+  // The user recieve the vouch
+  vouchee     User     @relation("Vouchee", fields: [voucheeId], references: [id])
+  voucheeId   String
+}
