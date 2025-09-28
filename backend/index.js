@@ -24,16 +24,6 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Log all incoming requests for debugging
-app.use((req, res, next) => {
-    console.log(`\n=== ${new Date().toISOString()} - ${req.method} ${req.path} ===`);
-    console.log('Content-Type:', req.headers['content-type']);
-    console.log('User-Agent:', req.headers['user-agent']);
-    if (req.body && Object.keys(req.body).length > 0) {
-        console.log('Request Body:', JSON.stringify(req.body, null, 2));
-    }
-    next();
-});
 
 // Health check endpoint
 app.get('/', (req, res) => {
@@ -44,18 +34,6 @@ app.get('/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Debug endpoint
-app.post('/api/test', (req, res) => {
-    console.log('Test endpoint received:');
-    console.log('Headers:', req.headers);
-    console.log('Body:', req.body);
-    console.log('Raw body type:', typeof req.body);
-    res.json({ 
-        received: req.body,
-        headers: req.headers,
-        success: true 
-    });
-});
 
 function calculateCreditScore(transactions, recharges, vouches){
     let score = 300;
@@ -93,7 +71,6 @@ function calculateCreditScore(transactions, recharges, vouches){
 
 //create user
 app.post('/api/user', async (req, res) => {
-    console.log('Creating user with data:', req.body);
     
     const { name, phone } = req.body;
     

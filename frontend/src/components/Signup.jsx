@@ -32,7 +32,6 @@ const Signup = ({onSignupSuccess, onSwitchToLogin}) => {
                 }
             );
             onSignupSuccess(response.data);
-            console.log(response.data);
         } catch (error) {
             console.error("Sign up error:", error);
             setError(error.response?.data?.error || "Could not sign up. The phone number might already be in use.");

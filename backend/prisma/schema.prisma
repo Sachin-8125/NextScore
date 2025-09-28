@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Prisma schema for Informal Credit Score System
 
 generator client {
   provider = "prisma-client-js"
@@ -52,11 +48,11 @@ model CommunityVouch {
   status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
   createdAt   DateTime @default(now())
 
-  // The user recieve the vouch
+  // The user giving the vouch
   voucher     User     @relation("Voucher", fields: [voucherId], references: [id])
   voucherId   String
 
-  // The user recieve the vouch
+  // The user receiving the vouch
   vouchee     User     @relation("Vouchee", fields: [voucheeId], references: [id])
   voucheeId   String
 }

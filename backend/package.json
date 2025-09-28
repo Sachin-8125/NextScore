@@ -1,19 +1,18 @@
 {
-  "name": "backend",
+  "name": "informal-credit-score-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Informal Credit Score system - calculates credit scores based on UPI transactions, mobile recharges, and community vouches",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "build": "npx prisma generate",
     "deploy": "npx prisma migrate deploy",
     "postinstall": "npx prisma generate",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
+  "keywords": ["credit-score", "fintech", "express", "prisma", "postgresql"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@prisma/client": "^6.16.2",
