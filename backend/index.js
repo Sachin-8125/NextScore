@@ -21,7 +21,26 @@ process.on('uncaughtException', (error) => {
 });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Log all incoming requests for debugging
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    if (req.body && Object.keys(req.body).length > 0) {
+        console.log('Request Body:', JSON.stringify(req.body, null, 2));
+    }
+    next();
+});
+
+// Global JSON error handler
+app.use((error, req, res, next) => {
+    if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+        console.error('Invalid JSON payload:', error.message);
+        return res.status(400).json({ error: 'Invalid JSON payload' });
+    }
+    next();
+});
 
 // Health check endpoint
 app.get('/', (req, res) => {
@@ -68,7 +87,25 @@ function calculateCreditScore(transactions, recharges, vouches){
 
 //create user
 app.post('/api/user', async (req, res) => {
+    console.log('Creating user with data:', req.body);
+    
     const { name, phone } = req.body;
+    
+    // Validate input
+    if (!name || !phone) {
+        return res.status(400).json({ 
+            error: 'Name and phone are required',
+            received: { name, phone }
+        });
+    }
+    
+    if (typeof name !== 'string' || typeof phone !== 'string') {
+        return res.status(400).json({ 
+            error: 'Name and phone must be strings',
+            received: { name: typeof name, phone: typeof phone }
+        });
+    }
+    
     try {
         const existingUser = await prisma.user.findUnique({ where: { phone } });
         if (existingUser) {
