@@ -25,10 +25,10 @@ const AddDataForms = ({ userId, onDataAdded }) => {
         let payload = {};
 
         if (formType === 'transaction') {
-            endpoint = `${API_BASE_URL}/transaction`;
+            endpoint = `${API_BASE_URL}/api/transaction`;
             payload = { userId, amount: numericAmount, type: transactionType };
         } else {
-            endpoint = `${API_BASE_URL}/recharge`;
+            endpoint = `${API_BASE_URL}/api/recharge`;
             payload = { userId, amount: numericAmount };
         }
 

@@ -14,7 +14,7 @@ const CreditScore = ({ userId, scoreKey }) => {
             if (!userId) return;
             setLoading(true);
             try {
-                const response = await axios.get(`${API_BASE_URL}/user/${userId}/score`);
+                const response = await axios.get(`${API_BASE_URL}/api/user/${userId}/score`);
                 setScore(response.data.creditScore);
                 setError('');
             } catch (err) {

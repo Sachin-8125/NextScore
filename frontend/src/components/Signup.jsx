@@ -23,7 +23,7 @@ const Signup = ({onSignupSuccess, onSwitchToLogin}) => {
         setError('');
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/user`, {name, phone});
+            const response = await axios.post(`${API_BASE_URL}/api/user`, {name, phone});
             onSignupSuccess(response.data);
             console.log(response.data);
         } catch (error) {
