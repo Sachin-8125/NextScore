@@ -33,7 +33,11 @@ const AddDataForms = ({ userId, onDataAdded }) => {
         }
 
         try {
-            await axios.post(endpoint, payload);
+            await axios.post(endpoint, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             setMessage({ text: `${formType === 'transaction' ? 'Transaction' : 'Recharge'} added successfully!`, type: 'success' });
             setAmount('');
             onDataAdded(); // Notify parent to refresh score

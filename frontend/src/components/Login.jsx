@@ -19,7 +19,14 @@ const Login = ({ onLoginSuccess, onSwitchToSignUp }) => {
         setError('');
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/login`, { phone });
+            const response = await axios.post(`${API_BASE_URL}/api/login`, 
+                { phone },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
             onLoginSuccess(response.data);
         } catch (err) {
             console.error("Login error:", err);
