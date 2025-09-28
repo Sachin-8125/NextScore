@@ -26,18 +26,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Log all incoming requests for debugging
 app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    console.log(`\n=== ${new Date().toISOString()} - ${req.method} ${req.path} ===`);
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('User-Agent:', req.headers['user-agent']);
     if (req.body && Object.keys(req.body).length > 0) {
         console.log('Request Body:', JSON.stringify(req.body, null, 2));
-    }
-    next();
-});
-
-// Global JSON error handler
-app.use((error, req, res, next) => {
-    if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
-        console.error('Invalid JSON payload:', error.message);
-        return res.status(400).json({ error: 'Invalid JSON payload' });
     }
     next();
 });
@@ -49,6 +42,19 @@ app.get('/', (req, res) => {
 
 app.get('/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// Debug endpoint
+app.post('/api/test', (req, res) => {
+    console.log('Test endpoint received:');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    console.log('Raw body type:', typeof req.body);
+    res.json({ 
+        received: req.body,
+        headers: req.headers,
+        success: true 
+    });
 });
 
 function calculateCreditScore(transactions, recharges, vouches){
