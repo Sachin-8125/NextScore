@@ -40,7 +40,7 @@ function App() {
                         />
                     ) : (
                         <Signup
-                            onSignUpSuccess={handleAuthSuccess}
+                            onSignupSuccess={handleAuthSuccess}
                             onSwitchToLogin={() => setAuthScreen('login')}
                         />
                     )

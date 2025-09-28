@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const Signup = ({onSignUpSuccess, onSwitchToLogin}) => {
+const Signup = ({onSignupSuccess, onSwitchToLogin}) => {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
@@ -27,8 +27,8 @@ const Signup = ({onSignUpSuccess, onSwitchToLogin}) => {
             onSignupSuccess(response.data);
             console.log(response.data);
         } catch (error) {
-            console.error("Sign up error:", err);
-            setError(err.response?.data?.error || "Could not sign up. The phone number might already be in use.");
+            console.error("Sign up error:", error);
+            setError(error.response?.data?.error || "Could not sign up. The phone number might already be in use.");
         }finally{
             setLoading(false);
         }

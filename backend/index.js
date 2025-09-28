@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './generated/prisma/client.js';
 
 const prisma = new PrismaClient();
 const app = express();
