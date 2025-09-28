@@ -1,13 +1,36 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
-import { PrismaClient } from './generated/prisma/client.js';
+// Load environment variables
+dotenv.config();
+
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const app = express();
 
+// Global error handling
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
 app.use(cors());
 app.use(express.json());
+
+// Health check endpoint
+app.get('/', (req, res) => {
+    res.json({ message: 'Informal Credit Score API is running', status: 'healthy' });
+});
+
+app.get('/health', (req, res) => {
+    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
 
 function calculateCreditScore(transactions, recharges, vouches){
     let score = 300;
@@ -147,4 +170,25 @@ app.get('/api/user/:id/score', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+const server = app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📊 Informal Credit Score API is ready!`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    await prisma.$disconnect();
+    server.close(() => {
+        console.log('Process terminated');
+    });
+});
+
+process.on('SIGINT', async () => {
+    console.log('SIGINT received, shutting down gracefully');
+    await prisma.$disconnect();
+    server.close(() => {
+        console.log('Process terminated');
+    });
+});

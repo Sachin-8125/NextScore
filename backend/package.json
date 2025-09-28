@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "build": "npx prisma generate && npx prisma db push",
+    "build": "npx prisma generate",
+    "deploy": "npx prisma migrate deploy",
+    "postinstall": "npx prisma generate",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
